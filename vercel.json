@@ -1,6 +1,7 @@
 {
   "functions": {
-    "api/analyze.py": {
+    "api/*.py": {
+      "runtime": "vercel-python@4.x",
       "maxDuration": 300
     }
   },
@@ -8,6 +9,10 @@
     {
       "path": "/api/analyze",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/analyze",
+      "schedule": "0 12 * * *"
     }
   ]
 }
