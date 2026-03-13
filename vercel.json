@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/analyze.py": {
+      "maxDuration": 300
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/analyze",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

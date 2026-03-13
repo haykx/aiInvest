@@ -1,0 +1,6 @@
+anthropic>=0.39.0
+yfinance>=0.2.31
+pandas>=2.1.0
+numpy>=1.26.0
+supabase>=2.0.0
+pydantic>=2.5.0
