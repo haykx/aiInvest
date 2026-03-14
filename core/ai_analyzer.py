@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import json
-from typing import Any
 
-import anthropic
+from anthropic import Anthropic
 
 import config
 from models.schemas import AIAnalysisResult
 
-
 SYSTEM_PROMPT = """You are an expert quantitative portfolio manager analyzing the US stock market.
 
 Your task: analyze market data and provide actionable investment recommendations for a mock portfolio.
+Recommendations are for a 1-5 day holding period. The portfolio is evaluated twice daily.
 
 ## Analysis Framework
 1. **Market Regime**: Assess overall market conditions via SPY trend and VIX level
@@ -25,7 +24,14 @@ Your task: analyze market data and provide actionable investment recommendations
 - Maintain at least 10% cash reserve
 - Max 10% of portfolio per trade
 - Only recommend BUY when confidence >= 0.70
-- Set stop-loss at 8% below entry for all positions
+- Only recommend SELL when confidence >= 0.50
+- For new BUY positions: set stop-loss at 8% below current price
+- For existing holdings (HOLD/SELL): set stop-loss at 8% below the avg_cost provided in the holdings data
+
+## Field Guidance
+- **allocation_pct**: Target total portfolio allocation for the ticker (not the trade size). For BUY, this is the desired final allocation. For HOLD, repeat the current allocation. For SELL, set to 0.
+- **target_price**: Set based on a minimum 2:1 reward-to-risk ratio relative to the stop-loss distance.
+- **confidence**: Your conviction level from 0.0 to 1.0. BUY requires >= 0.70, SELL requires >= 0.50.
 
 ## Output Format
 Respond with ONLY valid JSON matching this schema (no markdown, no code fences):
@@ -124,7 +130,7 @@ def analyze(
     portfolio: dict,
     holdings: list[dict],
 ) -> AIAnalysisResult:
-    client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+    client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
     user_prompt = _build_user_prompt(market_data, portfolio, holdings)
 
     response = client.messages.create(

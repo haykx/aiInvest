@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import config
-from models.schemas import AIAnalysisResult, StockRecommendation, Holding, Action
+from models.schemas import AIAnalysisResult, Action
 
 
 def check_stop_losses(holdings: list[dict], price_map: dict[str, float]) -> list[dict]:
