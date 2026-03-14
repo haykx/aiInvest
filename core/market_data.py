@@ -3,6 +3,8 @@ from __future__ import annotations
 import pandas as pd
 import yfinance as yf
 
+yf.set_tz_cache_location("/tmp")
+
 
 def calculate_rsi(series: pd.Series, period: int = 14) -> float | None:
     if len(series) < period + 1:
