@@ -1,4 +1,24 @@
 {
+  "builds": [
+    {
+      "src": "api/*.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/analyze",
+      "dest": "api/analyze.py"
+    },
+    {
+      "src": "/api/status",
+      "dest": "api/status.py"
+    },
+    {
+      "src": "/api/history",
+      "dest": "api/history.py"
+    }
+  ],
   "crons": [
     {
       "path": "/api/analyze",
